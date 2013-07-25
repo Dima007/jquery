@@ -144,7 +144,7 @@ jQuery.fn = jQuery.prototype = {
 			return typeof rootjQuery.ready !== "undefined" ?
 				rootjQuery.ready( selector ) :
 				// Execute immediately if ready is not present
-				selector();
+				selector( jQuery );
 		}
 
 		if ( selector.selector !== undefined ) {
