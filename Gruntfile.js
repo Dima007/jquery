@@ -45,32 +45,10 @@ module.exports = function( grunt ) {
 		build: {
 			all: {
 				dest: "dist/jquery.js",
-				src: [
-					"src/intro.js",
-					"src/core.js",
-					{ flag: "sizzle", src: "src/selector-sizzle.js", alt: "src/selector-native.js" },
-					"src/callbacks.js",
-					"src/deferred.js",
-					"src/support.js",
-					"src/data.js",
-					"src/queue.js",
-					"src/attributes.js",
-					"src/event.js",
-					"src/traversing.js",
-					"src/manipulation.js",
-					{ flag: "wrap", src: "src/wrap.js" },
-					{ flag: "css", src: "src/css.js" },
-					"src/serialize.js",
-					{ flag: "event-alias", src: "src/event-alias.js" },
-					{ flag: "ajax", src: "src/ajax.js" },
-					{ flag: "ajax/script", src: "src/ajax/script.js", needs: ["ajax"]  },
-					{ flag: "ajax/jsonp", src: "src/ajax/jsonp.js", needs: [ "ajax", "ajax/script" ]  },
-					{ flag: "ajax/xhr", src: "src/ajax/xhr.js", needs: ["ajax"]  },
-					{ flag: "effects", src: "src/effects.js", needs: ["css"] },
-					{ flag: "offset", src: "src/offset.js", needs: ["css"] },
-					{ flag: "dimensions", src: "src/dimensions.js", needs: ["css"] },
-					{ flag: "deprecated", src: "src/deprecated.js" },
-					"src/outro.js"
+				src: "src/jquery.js",
+				minimum: [
+					"core",
+					"selector"
 				]
 			}
 		},
