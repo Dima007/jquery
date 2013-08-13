@@ -2,6 +2,9 @@ module.exports = function( grunt ) {
 
 	"use strict";
 
+	// Integrate build task
+	require( "./build/build" )( grunt );
+
 	var distpaths = [
 			"dist/jquery.js",
 			"dist/jquery.min.map",
@@ -16,8 +19,7 @@ module.exports = function( grunt ) {
 			return data;
 		},
 		fs = require( "fs" ),
-		srcHintOptions = readOptionalJSON( "src/.jshintrc" ),
-		buildTask = require( "./build/build" )( grunt );
+		srcHintOptions = readOptionalJSON( "src/.jshintrc" );
 
 	// The concatenated file won't pass onevar
 	// But our modules can
@@ -36,11 +38,6 @@ module.exports = function( grunt ) {
 				},
 				cache: "dist/.sizecache.json"
 			}
-		},
-		selector: {
-			destFile: "src/selector-sizzle.js",
-			apiFile: "src/sizzle-jquery.js",
-			srcFile: "bower_components/sizzle/dist/sizzle.js"
 		},
 		build: {
 			all: {
@@ -183,97 +180,6 @@ module.exports = function( grunt ) {
 		);
 	});
 
-	grunt.registerTask( "selector", "Build Sizzle-based selector module", function() {
-
-		var cfg = grunt.config("selector"),
-			name = cfg.destFile,
-			sizzle = {
-				api: grunt.file.read( cfg.apiFile ),
-				src: grunt.file.read( cfg.srcFile )
-			},
-			compiled, parts;
-
-		/**
-
-			sizzle-jquery.js -> sizzle between "EXPOSE" blocks,
-			replace define & window.Sizzle assignment
-
-
-			// EXPOSE
-			if ( typeof define === "function" && define.amd ) {
-				define(function() { return Sizzle; });
-			} else {
-				window.Sizzle = Sizzle;
-			}
-			// EXPOSE
-
-			Becomes...
-
-			Sizzle.attr = jQuery.attr;
-			jQuery.find = Sizzle;
-			jQuery.expr = Sizzle.selectors;
-			jQuery.expr[":"] = jQuery.expr.pseudos;
-			jQuery.unique = Sizzle.uniqueSort;
-			jQuery.text = Sizzle.getText;
-			jQuery.isXMLDoc = Sizzle.isXML;
-			jQuery.contains = Sizzle.contains;
-
-		 */
-
-		// Break into 3 pieces
-		parts = sizzle.src.split("// EXPOSE");
-		// Replace the if/else block with api
-		parts[1] = sizzle.api;
-		// Rejoin the pieces
-		compiled = parts.join("");
-
-		grunt.verbose.writeln("Injected " + cfg.apiFile + " into " + cfg.srcFile);
-
-		// Write concatenated source to file, and ensure newline-only termination
-		grunt.file.write( name, compiled.replace( /\x0d\x0a/g, "\x0a" ) );
-
-		// Fail task if errors were logged.
-		if ( this.errorCount ) {
-			return false;
-		}
-
-		// Otherwise, print a success message.
-		grunt.log.writeln( "File '" + name + "' created." );
-	});
-
-	// Special "alias" task to make custom build creation less grawlix-y
-	grunt.registerTask( "custom", function() {
-		var done = this.async(),
-			args = [].slice.call(arguments),
-			modules = args.length ? args[0].replace(/,/g, ":") : "";
-
-
-		// Translation example
-		//
-		//   grunt custom:+ajax,-dimensions,-effects,-offset
-		//
-		// Becomes:
-		//
-		//   grunt build:*:*:+ajax:-dimensions:-effects:-offset
-
-		grunt.log.writeln( "Creating custom build...\n" );
-
-		grunt.util.spawn({
-			grunt: true,
-			args: [ "build:*:*:" + modules, "pre-uglify", "uglify", "dist" ]
-		}, function( err, result ) {
-			if ( err ) {
-				grunt.verbose.error();
-				done( err );
-				return;
-			}
-
-			grunt.log.writeln( result.stdout.replace("Done, without errors.", "") );
-
-			done();
-		});
-	});
-
 	// Process files for distribution
 	grunt.registerTask( "dist", function() {
 		var stored, flags, paths, nonascii;
@@ -410,7 +316,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks("grunt-jsonlint");
 
 	// Short list as a high frequency watch task
-	grunt.registerTask( "dev", [ "selector", "build:*:*", "jshint" ] );
+	grunt.registerTask( "dev", [ "build:*:*", "jshint" ] );
 
 	// Default grunt
 	grunt.registerTask( "default", [ "jsonlint", "dev", "pre-uglify", "uglify", "post-uglify", "dist:*", "compare_size" ] );

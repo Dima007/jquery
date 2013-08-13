@@ -1,6 +1,6 @@
 define([
-	"../../core",
-	"../../manipulation" // appendTo
+	"../core",
+	"../manipulation" // appendTo
 ], function( jQuery ) {
 
 var iframe,
@@ -22,7 +22,7 @@ function actualDisplay( name, doc ) {
  * Try to determine the default display value of an element
  * @param {String} nodeName
  */
-return function( nodeName ) {
+function defaultDisplay( nodeName ) {
 	var doc = document,
 		display = elemdisplay[ nodeName ];
 
@@ -51,6 +51,8 @@ return function( nodeName ) {
 	}
 
 	return display;
-};
+}
+
+return defaultDisplay;
 
 });

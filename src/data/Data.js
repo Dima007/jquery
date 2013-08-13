@@ -2,7 +2,7 @@ define([
 	"../core",
 	"../var/rnotwhite",
 	"./accepts"
-], function( jQuery, rnotwhite, accepts ) {
+], function( jQuery, rnotwhite ) {
 
 function Data() {
 	// Support: Android < 4,
@@ -18,7 +18,7 @@ function Data() {
 }
 
 Data.uid = 1;
-Data.accepts = accepts;
+Data.accepts = jQuery.acceptData;
 
 Data.prototype = {
 	key: function( owner ) {

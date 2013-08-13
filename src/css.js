@@ -3,7 +3,7 @@ define([
 	"./var/pnum",
 	"./css/var/cssExpand",
 	"./css/var/isHidden",
-	"./css/var/defaultDisplay",
+	"./css/defaultDisplay",
 	"./data/var/data_priv",
 	"./selector", // contains
 	"./support"
