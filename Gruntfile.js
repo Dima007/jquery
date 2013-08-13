@@ -271,7 +271,7 @@ module.exports = function( grunt ) {
 				// Strip banners
 				return contents
 					// Remove the main jQuery banner, it'll be replaced by the new banner anyway.
-					.replace( /^\/\*!(?:.|\n)*?\*\/\n?/g, "" )
+					.replace( /^\/\*![\W\w]*?\*\/\n?/g, "" )
 					// Strip other banners preserving line count.
 					.replace( /^\/\*!(?:.|\n)*?\*\/\n?/gm, function ( match ) {
 						return match.replace( /[^\n]/gm, "" );
