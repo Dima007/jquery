@@ -65,7 +65,7 @@ module.exports = function( grunt ) {
 		"build",
 		"Concatenate source, remove sub AMD definitions, (include/exclude modules with +/- flags), embed date/version",
 	function() {
-		var flag,
+		var flag, index,
 			done = this.async(),
 			compiled = "",
 			flags = this.flags,
@@ -117,6 +117,16 @@ module.exports = function( grunt ) {
 				excluder( flag );
 			}
 		}
+
+		// Handle Sizzle exclusion
+		// Replace with selector-native
+		if ( (index = excluded.indexOf("sizzle")) > -1 ) {
+			config.rawText = {
+				selector: "define(['./selector-native']);"
+			};
+			excluded.splice( index, 1 );
+		}
+
 		grunt.verbose.writeflags( excluded, "Excluded" );
 		grunt.verbose.writeflags( included, "Included" );
 
